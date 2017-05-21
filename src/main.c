@@ -1,6 +1,7 @@
 #include "main.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "hm_led.h"
 
 static void vTestTask(void *arg);
 static void SystemClock_Config(void);
@@ -21,8 +22,8 @@ int main(void)
   HAL_Init();  
   
   /* Configure LED3 and LED4 */
-  BSP_LED_Init(LED3);
-  BSP_LED_Init(LED4);
+  hm_led_init(HM_LED1);
+  hm_led_init(HM_LED2);
   
   /* Configure the system clock to 180 MHz */
   SystemClock_Config();

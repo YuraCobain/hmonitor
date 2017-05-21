@@ -11,10 +11,10 @@ TARGET_FILE="${TARGET_FILE:-"hmonitor"}"
 
 GDB_HOST="${GDB_HOST:-"127.0.0.1"}"
 GDB_PORT="${GDB_PORT:-"2331"}"
-PATH_TO_TC="/home/osboxes/opt/gcc-arm-none-eabi-5_4-2016q3"
-PATH_TO_STM32CUBE="${PATH_TO_STM32CUBE:-"/home/osboxes/opt/STM32Cube_FW_F4_V1.16.0"}"
+PATH_TO_TC="/opt/gcc-arm-none-eabi-5_4-2016q3"
+PATH_TO_STM32CUBE="${PATH_TO_STM32CUBE:-"/opt/STM32Cube_FW_F4_V1.15.0"}"
 PATH_TO_STM32_CMAKE="${PATH_TO_STM32_CMAKE:-"./stm32-cmake"}"
-PATH_TO_FREERTOS="/home/osboxes/dev/projects/hmonitor/freertos/FreeRTOS"
+PATH_TO_FREERTOS="./freertos/FreeRTOS"
 
 for arg in $@; do
   if [ "clean" = "$arg" ]; then
@@ -48,7 +48,7 @@ for arg in $@; do
         -DCMAKE_MODULE_PATH=$PATH_TO_STM32_CMAKE/cmake/ \
         -DCMAKE_BUILD_TYPE=Debug \
         .
-      make -j4 $TARGET_FILE.hex
+      make  $TARGET_FILE.hex VERBOSE=1
       cp $TARGET_FILE $TARGET_FILE.axf
   elif [ "flash" = "$arg" ]; then
       exec 5>&1
