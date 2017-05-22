@@ -21,7 +21,7 @@ cd ${PATH_TO_BUILD}
 for arg in $@; do
   if [ "clean" = "$arg" ]; then
       set -x
-      rm -rf ${PATH_TO_BUILD}
+      rm -rf ../${PATH_TO_BUILD}
   elif [ "release" = "$arg" ]; then
       cmake \
         -DTOOLCHAIN_PREFIX=$PATH_TO_TC \
