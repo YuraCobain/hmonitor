@@ -1,4 +1,4 @@
-SET(CMAKE_SYSTEM_NAME Windows)
+SET(CMAKE_SYSTEM_NAME Linux)
 SET(CMAKE_C_FLAGS "-g -gdwarf-version")
 
 PROJECT(hmonitor)
