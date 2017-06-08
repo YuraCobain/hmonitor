@@ -15,6 +15,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/drivers/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/middleware/ipc/inc
     ${CMSIS_INCLUDE_DIRS}
     ${STM32HAL_INCLUDE_DIR}
     ${STM32BSP_INCLUDE_DIR}
@@ -27,6 +28,7 @@ SET(PROJECT_SOURCES
     src/main.c
     src/stm32f4xx_hal_timebase_tim.c
     src/stm32f4xx_it.c
+    middleware/ipc/src/hm_msg_ch.c
 )
 
 ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}
