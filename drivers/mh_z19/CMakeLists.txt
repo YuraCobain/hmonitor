@@ -1,0 +1,7 @@
+# MH Z19 driver for CO2 consentration
+SET(MH_Z19_DRIVERS_SRCS
+    mh_z19_drv.c
+)
+ADD_LIBRARY(mh_z19_driver OBJECT ${MH_Z19_DRIVERS_SRCS})
+
+STM32_SET_CHIP_DEFINITIONS(mh_z19_driver ${STM32_CHIP_TYPE})

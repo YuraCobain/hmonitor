@@ -1,55 +1,50 @@
 #include "main.h"
 #include "hm_msg_ch.h"
+#include "hm_led.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 #include "string.h"
 
 #define MAX_CH_NAME_LEN 16u
-#define MAX_NUM_CH 4u
+#define MAX_NUM_CH 2u
 
 struct hm_msg_ch_t {
-    QueueHandle_t xQ;
     char name[MAX_CH_NAME_LEN];
     uint8_t is_alloc;
+    QueueHandle_t xQ;
 };
+
+QueueHandle_t xQ;
 
 static hm_msg_ch_t hm_msg_ch_pool[MAX_CH_NAME_LEN];
 
-hm_msg_ch_t* hm_msg_ch_init(char *ch_name, uint8_t len)
+hm_msg_ch_t *hm_msg_ch_init(char *ch_name, uint32_t len)
 {
     uint32_t i;
-    struct hm_msg_ch_t *h = NULL;
 
-    taskENTER_CRITICAL();
     for (i = 0; i < MAX_NUM_CH; i++){
         if (hm_msg_ch_pool[i].is_alloc)
             continue;
-        else {
-            h = &hm_msg_ch_pool[i];
-            h->is_alloc = 1;
-            break;
-        }
-    }
-    taskEXIT_CRITICAL();
+    
+        //hm_msg_ch_pool[i].xQ =  xQueueCreate(len, sizeof(msg_t *));
+        xQ =  xQueueCreate(len, sizeof(msg_t *));
+        hm_msg_ch_pool[i].is_alloc = 1;
+        strcpy(hm_msg_ch_pool[i].name, ch_name);
 
-    if (h){
-        h->xQ = xQueueCreate(len, sizeof(msg_t* ));
-        strcpy((char *)h->name, ch_name);
+        return &hm_msg_ch_pool[i];
     }
 
-    return h;
+    return NULL;
 }
 
 void hm_msg_ch_deinit(hm_msg_ch_t *ch)
 {
-    taskENTER_CRITICAL();
     ch->is_alloc = 0;
     ch->name[0] = '\0'; 
-    taskEXIT_CRITICAL();
 }
 
-hm_msg_ch_t* hm_msg_ch_attach(char *ch_name)
+hm_msg_ch_t *hm_msg_ch_attach(char *ch_name)
 {
     uint32_t i;
 

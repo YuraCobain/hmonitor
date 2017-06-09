@@ -1,0 +1,6 @@
+SET(LCD_DISPLAY_SRCS
+    lcd_display.c
+)
+ADD_LIBRARY(lcd_display OBJECT ${LCD_DISPLAY_SRCS})
+
+STM32_SET_CHIP_DEFINITIONS(lcd_display ${STM32_CHIP_TYPE})

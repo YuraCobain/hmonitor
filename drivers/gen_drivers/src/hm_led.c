@@ -1,5 +1,6 @@
 #include "hm_led.h"
 #include "main.h"
+#include "stm32f429i_discovery.h"
 #include "stdint.h"
 
 #define MAX_NUM_LEDS 2

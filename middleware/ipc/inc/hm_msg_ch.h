@@ -6,7 +6,7 @@ typedef struct hm_msg_ch_t hm_msg_ch_t;
 
 typedef uint32_t msg_t;
 
-hm_msg_ch_t* hm_msg_ch_init(char *ch_name, uint8_t len);
+hm_msg_ch_t* hm_msg_ch_init(char *ch_name, uint32_t len);
 void hm_msg_ch_deinit(hm_msg_ch_t *ch);
 
 hm_msg_ch_t* hm_msg_ch_attach(char *ch_name);

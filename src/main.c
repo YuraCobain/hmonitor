@@ -1,16 +1,16 @@
 #include "main.h"
+#include "string.h"
+#include "hm_led.h"
+#include "co2_sensor.h"
+#include "lcd_service.h"
+#include "hm_msg_ch.h"
+#include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "hm_led.h"
-#include "hm_msg_ch.h"
+#include "queue.h"
 
-static void vTestTask(void *arg);
-static void vSendTask1(void *arg);
-static void vSendTask2(void *arg);
-static void vRecvTask(void *arg);
-
+QueueHandle_t xQ;
 static void SystemClock_Config(void);
-
 /**
  * @brief  Main program
  * @param  None
@@ -18,6 +18,7 @@ static void SystemClock_Config(void);
  */
 int main(void)
 {
+    hm_msg_ch_t *ch = NULL;
     /* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches
        - Configure the Systick to generate an interrupt each 1 msec
@@ -25,102 +26,22 @@ int main(void)
        - Global MSP (MCU Support Package) initialization
        */
     HAL_Init();  
-
+    /* Configure the system clock to 180 MHz */
+    SystemClock_Config();
     /* Configure LED3 and LED4 */
     hm_led_init(HM_LED1);
     hm_led_init(HM_LED2);
+    //xQ =  xQueueCreate(4, sizeof(uint32_t *));
 
-    /* Configure the system clock to 180 MHz */
-    SystemClock_Config();
-
-    /* Thread 1 definition */
-    xTaskCreate(vTestTask, "test", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-
-    xTaskCreate(vRecvTask, "recv_test", configMINIMAL_STACK_SIZE, NULL, 1, NULL);
-
+    //ch = hm_msg_ch_init("recv_task", 4);
+    //co2_monitor_start(ch);
+    lcd_service_start(ch);
     /* Start scheduler */
     vTaskStartScheduler();
 
     return 0;
 }
 
-/**
- * @brief  Toggle LED3 and LED4 thread
- * @param  thread not used
- * @retval None
- */
-static void vTestTask(void *arg)
-{
-    (void) arg;
-
-    while (1)
-    {
-        BSP_LED_Toggle(LED3);
-        vTaskDelay(5000);
-
-        BSP_LED_Toggle(LED4);
-        vTaskDelay(5000);
-    }
-}
-
-static void vSendTask1(void *arg)
-{
-    (void) arg;
-    hm_msg_ch_t* ch = hm_msg_ch_attach("recv_task");
-
-    while (1)    
-    {
-        static uint32_t count1 = 1000;
-        
-        BSP_LED_Toggle(LED3);
-        vTaskDelay(500);
-        hm_msg_ch_send(ch, &count1);
-        count1++;
-        BSP_LED_Toggle(LED4);
-        vTaskDelay(500);
-    }
-}
-
-static void vSendTask2(void *arg)
-{
-    (void) arg;
-    hm_msg_ch_t* ch = hm_msg_ch_attach("recv_task");
-
-    while (1)
-    {
-        static uint32_t count2 = 3000;
-        
-        BSP_LED_Toggle(LED3);
-        vTaskDelay(200);
-        hm_msg_ch_send(ch, &count2);
-        count2++;
-        BSP_LED_Toggle(LED4);
-        vTaskDelay(200);
-    }
-
-
-}
-
-static void vRecvTask(void *arg)
-{
-    (void) arg;
-
-    msg_t msg;
-    hm_msg_ch_t* ch = hm_msg_ch_init("recv_task", 4);
-
-    xTaskCreate(vSendTask1, "send_test1", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
-    xTaskCreate(vSendTask2, "send_test2", configMINIMAL_STACK_SIZE, NULL, 2, NULL);
-
-    while (1)
-    {
-        while (hm_msg_ch_recv(ch, &msg) == pdPASS)
-        {
-            (void) msg;
-        }
-        vTaskDelay(500);
-
-    }
-}
 /**
  * @brief  System Clock Configuration
  *         The system Clock is configured as follow : 
