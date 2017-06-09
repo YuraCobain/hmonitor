@@ -3,7 +3,9 @@
 
 #include "gen_types.h"
 #include "hm_msg_ch.h"
+#include "FreeRTOS.h"
+#include "queue.h"
 
-hm_ret_t lcd_service_start(hm_msg_ch_t* ch);
+void vLCDService(void *arg);
 
 #endif /*__LCD_SRVICE_H_*/

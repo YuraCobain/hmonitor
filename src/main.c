@@ -1,16 +1,15 @@
 #include "main.h"
 #include "string.h"
 #include "hm_led.h"
-#include "co2_sensor.h"
 #include "lcd_service.h"
-#include "hm_msg_ch.h"
 #include "FreeRTOSConfig.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "queue.h"
 
-QueueHandle_t xQ;
 static void SystemClock_Config(void);
+
+QueueHandle_t xQ1;
 /**
  * @brief  Main program
  * @param  None
@@ -18,6 +17,7 @@ static void SystemClock_Config(void);
  */
 int main(void)
 {
+
     hm_msg_ch_t *ch = NULL;
     /* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches
@@ -31,11 +31,9 @@ int main(void)
     /* Configure LED3 and LED4 */
     hm_led_init(HM_LED1);
     hm_led_init(HM_LED2);
-    //xQ =  xQueueCreate(4, sizeof(uint32_t *));
-
-    //ch = hm_msg_ch_init("recv_task", 4);
-    //co2_monitor_start(ch);
-    lcd_service_start(ch);
+    
+    xQ1 = xQueueCreate( 10, sizeof(uint32_t *));
+    xTaskCreate(vLCDService, "LCD Service", 4*configMINIMAL_STACK_SIZE, xQ1, 2, NULL);
     /* Start scheduler */
     vTaskStartScheduler();
 

@@ -15,7 +15,7 @@ INCLUDE_DIRECTORIES(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/services/co2_monitor/inc
-    ${CMAKE_CURRENT_SOURCE_DIR}/services/lcd_display/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/services/lcd_service/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/middleware/ipc/inc
     ${CMAKE_CURRENT_SOURCE_DIR}/drivers/gen_drivers/inc
     ${CMSIS_INCLUDE_DIRS}
@@ -46,7 +46,6 @@ ADD_EXECUTABLE(${CMAKE_PROJECT_NAME}
 TARGET_LINK_LIBRARIES(${CMAKE_PROJECT_NAME}
     hm_services
     hm_drivers
-    hm_middleware
 )
 
 STM32_SET_TARGET_PROPERTIES(${CMAKE_PROJECT_NAME})
