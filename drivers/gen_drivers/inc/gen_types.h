@@ -1,6 +1,8 @@
 #ifndef __GEN_TYPES_H__
 #define __GEN_TYPES_H__
 
+#include <stdint.h>
+
 typedef enum {
     HM_OK,
     HM_TX_ERR,

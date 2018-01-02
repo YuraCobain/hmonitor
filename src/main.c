@@ -2,10 +2,6 @@
 #include "string.h"
 #include "hm_led.h"
 #include "lcd_service.h"
-#include "FreeRTOSConfig.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
 
 static void SystemClock_Config(void);
 
@@ -18,22 +14,22 @@ QueueHandle_t xQ1;
 int main(void)
 {
 
-    hm_msg_ch_t *ch = NULL;
     /* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches
        - Configure the Systick to generate an interrupt each 1 msec
        - Set NVIC Group Priority to 4
        - Global MSP (MCU Support Package) initialization
        */
-    HAL_Init();  
+    HAL_Init();
     /* Configure the system clock to 180 MHz */
     SystemClock_Config();
     /* Configure LED3 and LED4 */
     hm_led_init(HM_LED1);
     hm_led_init(HM_LED2);
-    
+
     xQ1 = xQueueCreate( 10, sizeof(uint32_t *));
     xTaskCreate(vLCDService, "LCD Service", 4*configMINIMAL_STACK_SIZE, xQ1, 2, NULL);
+
     /* Start scheduler */
     vTaskStartScheduler();
 
@@ -42,7 +38,7 @@ int main(void)
 
 /**
  * @brief  System Clock Configuration
- *         The system Clock is configured as follow : 
+ *         The system Clock is configured as follow :
  *            System Clock source            = PLL (HSE)
  *            SYSCLK(Hz)                     = 180000000
  *            HCLK(Hz)                       = 180000000
@@ -68,8 +64,8 @@ static void SystemClock_Config(void)
     /* Enable Power Control clock */
     __HAL_RCC_PWR_CLK_ENABLE();
 
-    /* The voltage scaling allows optimizing the power consumption when the device is 
-       clocked below the maximum system frequency, to update the voltage scaling value 
+    /* The voltage scaling allows optimizing the power consumption when the device is
+       clocked below the maximum system frequency, to update the voltage scaling value
        regarding system frequency refer to product datasheet.  */
     __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
 
@@ -87,13 +83,13 @@ static void SystemClock_Config(void)
     /* Activate the Over-Drive mode */
     HAL_PWREx_EnableOverDrive();
 
-    /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2 
+    /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2
        clocks dividers */
     RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
     RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
     RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;  
-    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;  
+    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;
+    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;
     HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5);
 }
 

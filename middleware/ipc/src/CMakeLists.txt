@@ -1,6 +1,0 @@
-SET(HM_IPC_SRCS
-    hm_msg_ch.c
-)
-ADD_LIBRARY(hm_msg_ch OBJECT ${HM_IPC_SRCS})
-
-STM32_SET_CHIP_DEFINITIONS(hm_msg_ch ${STM32_CHIP_TYPE})
